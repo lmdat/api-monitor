@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>API CALLED MONITOR</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col align-self-center text-center">
+                <h1>RestAPI Called Monitor</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="monitor_list" class="col-md-6 offset-md-3">
+            
+            </div>
+        </div>
+       
+    </div>
+</body>
+<script>
+
+    $(function(){
+        var socket = io("http://localhost:8000/socket.io/");
+
+        socket.on("CALL_REST_API", (msg) => {
+            console.log("Message: ", msg);
+            createAlert(JSON.parse(msg));
+        });
+    });
+
+    function createAlert(obj){
+        var objAlert = $([
+            "<div class='alert alert-success' role='alert'>",
+            "   <div class='row'>",
+            "       <div class='col-md-6'>Endpoint: <span class='endpoint'></span></div>",
+            "       <div class='col-md-6'>Time: <span class='time'></span></div>",
+            "   </div>",
+            "   <div class='row'>",
+            "       <div class='col-md-6'>Ip Address: <span class='ip-address'></span></div>",
+            "       <div class='col-md-6'>Status: <span class='status'></span></div>",
+            "   </div>",
+            "</div>"
+        ].join(''));
+
+        objAlert.find("span.endpoint").html(obj.endpoint);
+        objAlert.find("span.time").html(obj.time);
+        objAlert.find("span.ip-address").html(obj.ip);
+        objAlert.find("span.status").html(obj.status);
+
+        $('#monitor_list').append(objAlert);
+    }    
+
+    
+</script>
+</html>
